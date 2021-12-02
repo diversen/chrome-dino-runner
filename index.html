@@ -1,0 +1,43 @@
+<head>
+    <style>
+        #game-container, #game-canvas {
+            width: 600px;
+            height: 150px;    
+        }
+
+        #game-canvas {
+            border: 1px solid #eeeeee;
+        }
+
+        #game-container {
+            width: 50%;
+            margin: 0 auto;
+            max-width: 600px;
+        }
+
+        #game-text h3 {
+            text-align: center;
+        }
+
+
+
+    </style>
+    <script type="module">
+        import {Game} from '/src/game.js'
+        const game = new Game()
+        
+    </script>
+</head>
+<body>
+    <div id="game-container">
+        <div id="game-text">
+            <h3>T-Rex Chrome Dino Game</h3>
+            <p>
+                T-Rex Dinosaur - a replica of the hidden game from Chrome offline mode.     
+                Press Space to start the game online and jump your Dino, use down arrow (↓) to duck.
+                You can find the repo here <a href="https://github.com/diversen/chrome-dino-runner">https://github.com/diversen/chrome-dino-runner</a>
+            </p>
+        </div>
+        <canvas id="game-canvas" width="1200" height="300"></canvas>
+    </div>
+</body>
