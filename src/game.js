@@ -94,13 +94,15 @@ class Game extends Canvas {
 
         document.addEventListener('keydown', this.keydownEvent)
         document.addEventListener('keyup', this.keyupEvent)
-        document.addEventListener('click', this.clickEvent)
+        // document.addEventListener('click', this.clickEvent)
+        document.addEventListener('touchstart', this.clickEvent)
     }
 
     removeEvents() {
         document.removeEventListener('keydown', this.keydownEvent)
         document.removeEventListener('keyup', this.keyupEvent)
-        document.removeEventListener('click', this.clickEvent)
+        // document.removeEventListener('click', this.clickEvent)
+        document.addEventListener('touchstart', this.clickEvent)
 
     }
 
