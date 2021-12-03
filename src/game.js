@@ -10,20 +10,19 @@ class Game extends Canvas {
 
     constructor() {
         super()
-
-        this.audio = new Audio()
-        this.addEvents()
-        this.state = 'init'
         this.init()
-
     }
 
     async init() {
 
-        // this.ctx.clearRect(0, 0, this.width, this.height);
+        this.audio = new Audio()
+        this.state = 'init'
+
         let json = await fetchJson('assets.json')
         await this.loadAssets(json);
+        
         this.initAssets()
+        this.addEvents()
     }
 
     initAssets() {
@@ -214,16 +213,18 @@ class Game extends Canvas {
     async loadAssets(json) {
 
         this.assets = {}
-
-        try {
-
+        let promises = []
             for (const elem of json) {
-                this.assets[elem.shortName] = await loadImage(elem.path)
+                promises.push(loadImage(elem.path))
             }
-
-        } catch (err) {
-            console.log(err)
-        }
+        
+        await Promise.all(promises).then( images => {
+            let i = 0;
+            for (const elem of json) {
+                this.assets[elem.shortName] = images[i]; // loadImage(elem.path)
+                i += 1
+            }
+        })
     }
 }
 
