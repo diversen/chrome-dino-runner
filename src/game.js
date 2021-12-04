@@ -10,7 +10,7 @@ class Game extends Canvas {
 
     constructor() {
         super()
-        this.debug = 1
+        this.debug = 0
         this.loadGame()
     }
 
