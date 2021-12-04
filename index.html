@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <head>
     <title>chrome dino runner</title>
+    <script>
+
+        if (window.location.hostname !== 'localhost') { 
+            if (location.protocol !== 'https:') {
+                location.replace(`https:${location.href.substring(location.protocol.length)}`);
+            }
+        }
+        
+    </script>
     <style>
 
         #game-container, #game-canvas {
@@ -48,5 +57,8 @@
             </p>
         </div>
         <canvas id="game-canvas" width="1200" height="300"></canvas>
+        <div id ="fps"></div>
+        <div id= "speed"></div>
+        
     </div>
 </body>

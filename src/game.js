@@ -1,4 +1,4 @@
-import { loadImage, getTimeStamp, fetchJson, detectCollision } from '/src/utils.js'
+import { loadImage, fetchJson, detectCollision } from '/src/utils.js'
 import { Canvas } from '/src/canvas.js'
 import { Clouds } from '/src/clouds.js'
 import { Track } from '/src/track.js'
@@ -10,10 +10,11 @@ class Game extends Canvas {
 
     constructor() {
         super()
-        this.init()
+        this.debug = 1
+        this.loadGame()
     }
 
-    async init() {
+    async loadGame() {
 
         this.audio = new Audio()
         this.state = 'init'
@@ -27,11 +28,12 @@ class Game extends Canvas {
 
     initAssets() {
 
-        this.beginTime = getTimeStamp();
-        this.time = 0;
+        this.gameBeginTime = performance.now();
         this.speed = 3;
-        this.maxSpeed = 4
+        this.maxSpeed = 5
         this.frameCounter = 0
+        this.fps = 30
+        this.score = 0
 
         this.clouds = new Clouds(this.assets.Cloud)
         this.clouds.init()
@@ -56,6 +58,7 @@ class Game extends Canvas {
             }
 
             if (this.state == 'init') {
+                this.initAssets();
                 this.loop();
                 this.state = 'playing'
                 this.dino.jump()
@@ -70,7 +73,6 @@ class Game extends Canvas {
 
             if (this.state == 'dead') {
 
-                console.log('dead and restart ')
                 this.initAssets();
                 this.loop()
                 this.state = 'playing'
@@ -93,38 +95,49 @@ class Game extends Canvas {
 
         document.addEventListener('keydown', this.keydownEvent)
         document.addEventListener('keyup', this.keyupEvent)
-        // document.addEventListener('click', this.clickEvent)
         document.addEventListener('touchstart', this.clickEvent)
     }
 
     removeEvents() {
         document.removeEventListener('keydown', this.keydownEvent)
         document.removeEventListener('keyup', this.keyupEvent)
-        // document.removeEventListener('click', this.clickEvent)
         document.addEventListener('touchstart', this.clickEvent)
 
     }
 
     updateSpeed() {
 
-        const now = getTimeStamp();
-        this.time = (now - this.beginTime) / 1000;
+        if (this.frameCounter % 60) {
+            if (this.speed < this.maxSpeed) {
+                this.speed += 0.001
+            }
+        }       
+    }
 
-        if (this.speed < this.maxSpeed) {
-            this.speed = this.speed + this.time / 10000
-        }
+    getSpeed() {
+        let speed = this.speed * (60 / this.fps)
+        if (this.debug) document.getElementById('speed').innerHTML = "Speed: " + speed
+        return speed
     }
 
     calculateScore(speed, frameCounter) {
-        // https://math.stackexchange.com/questions/1781331/math-formula-to-calculate-game-score
-        let score = (10 / 9) * ((speed - 3) + (10 - frameCounter) / 11);
-        score = Math.abs(Math.floor(score));
-        return score
+        this.score += 1
+        return this.score
+    }
+    
+    updateFps(){
+
+        if (this.frameCounter % 60) { 
+            let timeElapsed = performance.now() - this.gameBeginTime;
+            this.fps = 1000 * this.frameCounter / timeElapsed;
+        }
+
+        if (this.debug) document.getElementById('fps').innerHTML = 'FPS: ' + this.fps
     }
 
     drawScore(speed, frameCounter) {
 
-        if (frameCounter % 10 === 0) {
+        if (frameCounter % 5 === 0) {
             let score = this.calculateScore(speed, frameCounter);
             this.score = score
         }
@@ -154,12 +167,16 @@ class Game extends Canvas {
     }
 
     loop() {
-
+        
+        let running = true;
         this.frame = window.requestAnimationFrame(async () => {
-            let running = true
+
+            this.updateFps()
             if (this.state == 'playing') {
 
                 this.updateSpeed();
+                let speed = this.getSpeed()
+
                 this.ctx.clearRect(0, 0, this.width, this.height);
 
                 let obstacle = this.obstacles.obstacles[0]
@@ -168,15 +185,14 @@ class Game extends Canvas {
                 if (detectCollision(dino, obstacle)) {
                     running = false
                     this.gameOver()
-
                 }
 
-                this.drawScore(this.speed, this.frameCounter)
+                this.drawScore(speed, this.frameCounter)
 
-                this.clouds.update(1, this.frameCounter)
-                this.track.update(this.speed * 4, this.frameCounter)
-                this.dino.update(this.speed, this.frameCounter)
-                this.obstacles.update(this.speed * 4, this.frameCounter)
+                this.clouds.update(speed, this.frameCounter)
+                this.track.update(speed * 4, this.frameCounter)
+                this.dino.update(speed, this.frameCounter)
+                this.obstacles.update(speed * 4, this.frameCounter)
 
                 if (this.score > 100) {
                     this.obstacles.useBirds = true

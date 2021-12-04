@@ -85,7 +85,6 @@ class Obstacles extends Canvas {
         this.maxNum = 3;
         this.keys = ['LargeCactus1', 'LargeCactus2', 'LargeCactus3', 'SmallCactus1', 'SmallCactus2', 'SmallCactus3']
         this.keys2 = ['LargeCactus1', 'LargeCactus2', 'LargeCactus3', 'SmallCactus1', 'SmallCactus2', 'SmallCactus3', 'Bird', 'Bird']
-        // this.keys = ['LargeCactus1', 'Bird']
         this.useBirds = false
     }
 
@@ -133,7 +132,7 @@ class Obstacles extends Canvas {
         const distance = this.canvas.width - lastObstacle.position.x
 
         if (distance > 400 && numObstacles < this.maxNum) {
-            if (getRandomNum(0, 100) == 0) {
+            if (getRandomNum(0, 10) == 0) {
                 this.add()
             }
         }

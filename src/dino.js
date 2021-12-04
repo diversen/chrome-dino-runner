@@ -1,7 +1,7 @@
 import { Canvas } from '/src/canvas.js'
 import { KeyEvents } from '/src/key_events.js'
 import { Vector } from '/src/vector.js'
-
+import { isMobile } from '/src/utils.js'
 
 class Dino extends Canvas {
 
@@ -11,22 +11,43 @@ class Dino extends Canvas {
         this.imgs = imgs
         this.state = 'init' // init, run, jump, duck
         this.keyEvents = new KeyEvents();
+        
+        this.debug = 1
+        this.jumpScaler = 1.30
+        
+        if (isMobile()) {
+            this.jumpScaler *= 1.2
+        }
+
         this.setVectors()
+        
+    }
+
+    init() {
+
+        this.size = Vector.fromImg(this.imgs.DinoStart)
+        this.ctx.save();
+        this.ctx.drawImage(this.imgs.DinoStart, this.position.x, 180);
+        this.drawRect(this.position.x, this.position.y, this.size.x, this.size.y)
+        this.ctx.restore()
+
     }
 
     setVectors() {
-
+        
         this.initPosition = new Vector(32, 184)
         this.position = new Vector(32, 184)
-        this.gravity = new Vector(0, 2)
-        this.jumpSpeed = new Vector(0, -24) // Speed up 
+        this.gravity = new Vector(0, 2.9)
+
+        // Junmp speed up. Negative bacause that beings us closer to the top of the screen
+        this.jumpSpeed = new Vector(0, -24 * this.jumpScaler) 
         this.jumpSpeedHold = 1.03 // Scalar
+
     }
 
     jump() {
 
         this.state = 'jump'
-
         this.collision = this.position.copy()
         this.size = Vector.fromImg(this.imgs.DinoRun1)
 
@@ -114,16 +135,6 @@ class Dino extends Canvas {
         this.ctx.restore()
     }
 
-    init() {
-
-        this.size = Vector.fromImg(this.imgs.DinoStart)
-        this.ctx.save();
-        this.ctx.drawImage(this.imgs.DinoStart, this.position.x, 180);
-        this.drawRect(this.position.x, this.position.y, this.size.x, this.size.y)
-        this.ctx.restore()
-
-    }
-
     draw() {
 
         if (this.state == 'dead') {
@@ -144,6 +155,7 @@ class Dino extends Canvas {
     }
 
     update(speed, frameCounter) {
+        this.speed = speed
         this.frameCounter = frameCounter;
         this.draw()
     }

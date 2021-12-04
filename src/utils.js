@@ -30,7 +30,7 @@ function fetchJson(url) {
 
 function detectCollision(actor, obstacle) {
 
-    // Extract 20 from the dino width is a simple method to give some more space
+    // Extract 30 from the dino width is a simple method to give some more space
     if (actor.collision.x < obstacle.position.x + obstacle.size.x &&
         actor.collision.x + actor.size.x - 30 > obstacle.position.x &&
         actor.collision.y < obstacle.position.y + obstacle.size.y &&
@@ -39,4 +39,9 @@ function detectCollision(actor, obstacle) {
     }
 }
 
-export { loadImage, getRandomNum, getTimeStamp, fetchJson, getRandomElem, detectCollision }
+function isMobile () {
+    let isMobileDevice = window.navigator.userAgent.toLowerCase().includes("mobi");
+    return isMobileDevice
+}
+
+export { loadImage, getRandomNum, getTimeStamp, fetchJson, getRandomElem, detectCollision, isMobile }
