@@ -132,7 +132,7 @@ class Obstacles extends Canvas {
         const distance = this.canvas.width - lastObstacle.position.x
 
         if (distance > 400 && numObstacles < this.maxNum) {
-            if (getRandomNum(0, 10) == 0) {
+            if (getRandomNum(0, 50) == 0) {
                 this.add()
             }
         }

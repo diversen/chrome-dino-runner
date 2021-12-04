@@ -13,12 +13,17 @@ class Dino extends Canvas {
         this.keyEvents = new KeyEvents();
         
         this.debug = 1
-        this.jumpScaler = 1.30
+        this.jumpScaler = 1.20
+        this.gravityScaler = 1.5
+
+        // Junmp speed up. Negative bacause that beings us closer to the top of the screen
+        this.jumpSpeedUp = -17
         
         if (isMobile()) {
             this.jumpScaler *= 1.2
         }
 
+        this.jumpSpeedHold = 1.04 // Extra acceleration when holding space
         this.setVectors()
         
     }
@@ -37,11 +42,11 @@ class Dino extends Canvas {
         
         this.initPosition = new Vector(32, 184)
         this.position = new Vector(32, 184)
-        this.gravity = new Vector(0, 2.9)
+        this.gravity = new Vector(0, this.gravityScaler)
 
-        // Junmp speed up. Negative bacause that beings us closer to the top of the screen
-        this.jumpSpeed = new Vector(0, -24 * this.jumpScaler) 
-        this.jumpSpeedHold = 1.03 // Scalar
+        
+        this.jumpSpeed = new Vector(0, this.jumpSpeedUp * this.jumpScaler) 
+        
 
     }
 
