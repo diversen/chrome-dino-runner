@@ -1,6 +1,6 @@
 # chrome-dino-runner
 
-The `chrome dino runner` reverse engineered. Made in order to learn to make a small and simple game without using too much time. 
+The `chrome dino runner` reverse engineered.
 
 You can play it [https://chrome-dino-runner.surge.sh/](https://chrome-dino-runner.surge.sh/)
 
